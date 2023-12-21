@@ -7,7 +7,7 @@ import { Donation, DonationPostBody } from './types';
 var donations: Donation[] = [];
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<any> => {
-  const body: DonationPostBody = JSON.parse(event.body);
+  const body: DonationPostBody = JSON.parse(event.body ?? "");
 
   console.info(`New donation request from: ${body.full_name} (${body.email}), sum: ${body.sum}`)
 
