@@ -1,73 +1,46 @@
 # CRUK Node.js Recruitment Assignment
 
-**Note - for the Python version of this exercise please click [[HERE](https://github.com/CRUKorg/cruk-backend-assignment/tree/python-version)]**
+## Installation 
+Assuming you have a typescript enviroment, run the following commends once:
 
-### Functional Requirements
+```
+npm install
+alias cdk="npx aws-cdk@2.x"
+```
 
-Build a service in Node.js that can be deployed to AWS which exposes an API and can be consumed from any client. 
+After that run the following to deploy the service (`emailSource` should be the email Address used for the "From:" field in outgoing emails.)
+```
+cdk synth
+cdk deploy --parameters emailSource=<email>
+```
 
-This service should check how many donations a user has made and send them a special thank you message (e.g. via SNS) if they make 2 or more donations. 
+At this point the service should be deployed.
 
-### Output Package Requirements
+## Endpoints
+[POST] `/donation`
 
-The solution has to be provided as a Github repository including full commit history.
+This endpoint receives a donation and saves it to the database.
+POST body should look like this:
+```
+{
+    "full_name":"Daria Kafler",
+    "email":"me@dariakafler.com",
+    "sum": 1000
+}
+```
+This would save a donation of 1000, under Daria's name. If a user donates twice, a thank you email will be sent to their address.
 
-Please follow the frequent commit practice so that your local repository indicates reasonable milestones of your implementation.
+The service has been deployed for you to try at: https://j2j5racf1h.execute-api.eu-west-1.amazonaws.com/prod/
 
-The repository MUST contain:
+## If I had more time
+Having very limited previous experience with AWS, it took the vast majorioty of time to figure it out and set up. This is also true for CDK, where a chunk of time went to migrating to CDK2, since CDK1 is now deprecated. 
 
-- Source code
-    - It should be buildable/viewable.
-    - It must be written in Typescript.
-    - In case you need to use external libraries, please add them.
-- Infrastructure as Code (We use the AWS CDK and encourage you to use this also, but we will accept the use of Cloudformation or Terraform if you feel more comfortable with these technologies). Please refrain from using the Serverless Framework for this task.
-- Adequate tests.
-- Any installation and deployment instructions for apps and components.
-- README file with URL for testing the service online and a brief explanation on the scalability strategy.
+### Logging
+At the moment logging is very rudamentary as I struggled to find something to use with AWS with the time I had left. For production I'd use structured logging to allow better troubleshooting, app monitoring and scalability.
 
-### Rules
+### Testing
+For production code I would test the logic of the service, using unit and integration tests, as well as the deployment related code. As mentioned above, I unfortunately ran out of time to implement.
 
-If you do not complete the test please indicate how you would intend to finalise it in the README. 
-
-The team is looking to see how you approach a problem with a broad spec which could have a number of different solutions and then explaining your approach? Keep the implementation simple, but make sure you have automated tests, logging (structured logs with JSON), and include information in the README about how you'll scale the solution to thousands of users, how you'd approach logging & monitoring at scale so that you can actually debug the system as it increases in complexity.
-
-We are not expecting the solution to be deployed, but we expect you to understand the process and best practices around the deployment process. It’s enough if you could provide to our engineers clear and easy instructions on how to deploy your application.
-
-### FAQ's
-
-*Any client - what are the clients?*
-
-A client is a consumer of the API (e.g. web app, another backend service, a mobile app, etc). In this case "Any client" means for us, the API can and should be implemented independently of who/what is going to consume it.
-
-*Does this sit behind an API Gateway?*
-
-Whilst this is not strictly required, it’s just one of various solutions on AWS for exposing your API
-
-*How is authentication performed?*
-
-We are not looking at the implementation of the authentication in the code challenge.
-
-*Will the API receives a token in the header (JWT with authentication service defined)?*
-
-Not necessarily, as per the answer above the authentication is not required for this task.
-
-*Will only certain roles be able to call the API (eg, AWS IAM Permissions with AWS API Gateway)?*
-
-Again, no authorisation or permissions are expected to be set for the coding challenge. We can discuss these things during the F2F interview.
-
-*Will I need to persist donations data in a database?*
-
-Most candidates have used an in-memory store which saves them time to provision and deploy machines/databases. If you want to use a specific data store we don’t have any objection.
-
-*Is there a standardised/preferred method of logging?*
-
-We don’t expect the coding challenge to be production-ready and ship logs anywhere but having basic error handling is considered a minimum requirement. You will definitely get extra points if you handle and log successfully edge-cases and critical paths (e.g. fatal errors).
-
-*In terms of deploying to AWS, should I include a build pipeline or can that be done manually?*
-
-Do it manually, it's a one-time thing
-
-*Can we implement this using AWS Lambda?*
-
-Absolutely! show us your AWS chops
+### Database
+The service currently uses a list of donation objects as its database, which is not ideal. For production I'd use an actual database, either an AWS specific one such as DynamoDB or something more general like postgres. For this very simple case, the specifics of which database to use aren't important. Depending on future needs of the service, we'd have to consider options such as key-value store, a sql database, etc.
 
