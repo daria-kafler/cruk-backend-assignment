@@ -12,23 +12,23 @@ export class RecruitmentNodejsTestStack extends cdk.Stack {
     const nodeJsFunctionProps: NodejsFunctionProps = {
       runtime: Runtime.NODEJS_16_X,
       environment: {
-        TEST: 'TEST123'
+
       }
     }
 
-    const getTestLambda = new NodejsFunction(this, 'getTestFunction', {
-      entry: join(__dirname, '../src', 'test.ts'),
+    const postDonationLambda = new NodejsFunction(this, 'postDonationFunction', {
+      entry: join(__dirname, '../src', 'donation.ts'),
       ...nodeJsFunctionProps
     });
 
-    const getTestIntegration = new LambdaIntegration(getTestLambda);
+    const postDonationIntegration = new LambdaIntegration(postDonationLambda);
 
-    const api = new RestApi(this, 'testApi', {
-      restApiName: 'test service'
+    const api = new RestApi(this, 'donationApi', {
+      restApiName: 'CRUK Donation API'
     });
 
-    const test = api.root.addResource('test');
-    test.addMethod('GET', getTestIntegration);
+    const donation = api.root.addResource('donation');
+    donation.addMethod('POST', postDonationIntegration);
     // The code that defines your stack goes here
   }
 }
