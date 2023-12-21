@@ -12,7 +12,6 @@ export class RecruitmentNodejsTestStack extends cdk.Stack {
     const nodeJsFunctionProps: NodejsFunctionProps = {
       runtime: Runtime.NODEJS_16_X,
       environment: {
-
       }
     }
 
@@ -29,6 +28,5 @@ export class RecruitmentNodejsTestStack extends cdk.Stack {
 
     const donation = api.root.addResource('donation');
     donation.addMethod('POST', postDonationIntegration);
-    // The code that defines your stack goes here
   }
 }

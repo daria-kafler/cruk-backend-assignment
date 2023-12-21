@@ -1,7 +1,7 @@
 export type Donation = {
   full_name: string,
   email: string,
-  date: string,
+  date: number,
   sum: number
 }
 
