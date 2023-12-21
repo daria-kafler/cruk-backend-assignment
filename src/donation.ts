@@ -49,7 +49,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
 
   if (donatedByUser.length >= 2) {
     console.info(`Multiple donations from ${donation.full_name} sending email to ${donation.email}`)
-    await sendEmail(donation.email, "me@dariakafler.com");
+    await sendEmail(donation.email, process.env.EMAIL_SOURCE);
   }
 
   console.info(`Donation request successful from: ${donation.full_name} (${donation.email}), sum: ${donation.sum}`)

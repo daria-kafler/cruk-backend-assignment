@@ -9,9 +9,15 @@ export class RecruitmentNodejsTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const emailSource = new cdk.CfnParameter(this, 'emailSource', {
+      type: 'String',
+      description: 'Email Address used for the "To:" field in outgoing emails'
+    })
+
     const nodeJsFunctionProps: NodejsFunctionProps = {
       runtime: Runtime.NODEJS_16_X,
       environment: {
+        'EMAIL_SOURCE': emailSource.valueAsString
       }
     }
 
