@@ -14,16 +14,12 @@ export class RecruitmentNodejsTestStack extends cdk.Stack {
       description: 'Email Address used for the "From:" field in outgoing emails'
     })
 
-    const nodeJsFunctionProps: NodejsFunctionProps = {
+    const postDonationLambda = new NodejsFunction(this, 'postDonationFunction', {
+      entry: join(__dirname, '../src', 'donation.ts'),
       runtime: Runtime.NODEJS_16_X,
       environment: {
         'EMAIL_SOURCE': emailSource.valueAsString
       }
-    }
-
-    const postDonationLambda = new NodejsFunction(this, 'postDonationFunction', {
-      entry: join(__dirname, '../src', 'donation.ts'),
-      ...nodeJsFunctionProps
     });
 
     const postDonationIntegration = new LambdaIntegration(postDonationLambda);
